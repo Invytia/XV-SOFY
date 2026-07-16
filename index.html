@@ -442,6 +442,12 @@
                 <div class="family-names">María Isabel Calzada Vera<br>Eduardo Morales Lera</div>
             </div>
 
+            <div id="pase-container" class="bloque-vidrio" style="display: none; margin-top: 10px;">
+                <div class="section-heading">Pase de Entrada</div>
+                <div style="font-family:'Cinzel',serif;font-size:32px;font-weight:600;color:var(--text-deep);letter-spacing:3px; margin: 10px 0;" id="pase-text"></div>
+                <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--text-rose);font-weight:600;">Personal e Intransferible</div>
+            </div>
+
             <div class="divider-ornate"><div class="divider-ornate-diamond"></div></div>
 
             <div class="section-heading-sm">Cuenta Regresiva</div>
@@ -716,7 +722,15 @@
         function sendConfirmationViaWhatsApp(){
             const inp=document.getElementById('guest-name');
             if(!inp||!inp.value.trim()){alert('Por favor ingresa tu nombre completo.');inp.focus();return;}
-            const msg=`¡Hola! Confirmo mi asistencia a los XV Años de Sofía.\n\n• Nombre: ${inp.value.trim()}`;
+            
+            let pasesText = "";
+            const urlParams = new URLSearchParams(window.location.search);
+            const p = parseInt(urlParams.get('p'));
+            if (!isNaN(p) && p >= 1 && p <= 6) {
+                pasesText = `\n• Pases: ${p} ${p === 1 ? 'persona' : 'personas'}`;
+            }
+            
+            const msg=`¡Hola! Confirmo mi asistencia a los XV Años de Sofía.\n\n• Nombre: ${inp.value.trim()}${pasesText}`;
             window.open(`https://wa.me/525535054154?text=${encodeURIComponent(msg)}`,'_blank');
         }
 
@@ -764,6 +778,21 @@
                 }, 3500);
             });
         }
+
+        /* ===== SISTEMA DE PASES INVYTIA ===== */
+        function initPases() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const p = parseInt(urlParams.get('p'));
+            
+            if (!isNaN(p) && p >= 1 && p <= 6) {
+                const container = document.getElementById('pase-container');
+                const textElement = document.getElementById('pase-text');
+                const word = p === 1 ? 'PERSONA' : 'PERSONAS';
+                textElement.innerText = `${p} ${word}`;
+                container.style.display = 'block';
+            }
+        }
+        initPases();
     </script>
 </body>
 </html>
